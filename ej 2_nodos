@@ -1,0 +1,49 @@
+class LinkedList:
+
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next_node = next_node
+
+    def __init__(self):
+        self.__first = None
+        self.__len = 0
+
+    def insert_first(self, value):
+        self.__first = self.Node(value, self.__first)
+        self.__len += 1
+
+    def __iter__(self):
+        current = self.__first
+        while current is not None:
+            yield current.value
+            current = current.next_node
+    
+    def reverse(self):
+        prev = None #inicializamos variable prev
+        current = self.__first
+        while current is not None:
+            siguente = current.next_node
+            current.next_node = prev   #invertimos enlace
+            prev = current  #avanzo prev y por tanto avanzo current
+            current = siguente
+            
+        self.__first = prev
+        
+if __name__ == "__main__":
+    lista = LinkedList()
+
+    valores = [10, 20, 30, 40]
+
+    for v in valores:
+        lista.insert_first(v)
+
+    print("Antes:", end=" ")
+    for x in lista:
+        print(x, end=" → ")
+
+    lista.reverse()
+
+    print("\nDespués:", end=" ")
+    for x in lista:
+        print(x, end=" → ")
