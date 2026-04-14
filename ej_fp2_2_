@@ -1,0 +1,62 @@
+from stackexceptions import StackEmptyError
+
+class Stack:
+
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next_node = next_node
+
+    def __init__(self):
+        self.__top = None
+        self.size = 0
+
+    def push(self, value):
+        new_node = self.Node(value)
+        new_node.next_node = self.__top
+        self.__top = new_node
+        self.size += 1
+
+    def pop(self):
+        if self.__top is None:
+            raise StackEmptyError("La pila está vacía")
+        
+        valor = self.__top.value
+        self.__top = self.__top.next_node
+        self.size -= 1
+        return valor
+
+    @property
+    def top(self):
+        if self.__top is None:
+            raise StackEmptyError("La pila está vacía")
+        return self.__top.value
+
+    def is_empty(self):
+        return self.__top is None
+
+    def __len__(self):
+        return self.size
+
+
+if __name__ == "__main__":
+    # Creamos una pila vacía
+    my_stack = Stack()
+
+    # Insertamos 10 elementos
+    for i in range(10):
+        my_stack.push(i)
+        print(my_stack.top)
+
+    print("---")
+
+    # Sacamos todos los elementos
+    while not my_stack.is_empty():
+        print(my_stack.top)
+        my_stack.pop()
+
+    # Probamos error
+    try:
+        my_stack.pop()
+    except StackEmptyError as e:
+        print(e)
