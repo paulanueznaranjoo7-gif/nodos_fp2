@@ -1,0 +1,47 @@
+class LinkedList:
+
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next_node = next_node
+
+    def __init__(self):
+        self.__first = None
+
+    def insert_first(self, value):
+        self.__first = self.Node(value, self.__first)
+
+    def __iter__(self):
+        current = self.__first
+        while current is not None:
+            yield current.value
+            current = current.next_node
+            
+    def eliminar_duplicados(self):
+        current = self.__first
+        runner = None
+        
+        while current is not None:
+            runner = current #para que empiezen a contar juntos
+            while runner is not None and runner.next_node is not None:
+                if runner.next_node.value == current.value:
+                   runner.next_node = runner.next_node.next_node
+                runner = runner.next_node
+            current = current.next_node
+                
+                
+if __name__ == "__main__":
+    lista = LinkedList()
+
+    for v in [7, 2, 5, 7, 3, 5, 3]:
+        lista.insert_first(v)
+
+    print("Original:", end=" ")
+    for x in lista:
+        print(x, end=" -> ")
+
+    lista.eliminar_duplicados()
+
+    print("\nSin duplicados:", end=" ")
+    for x in lista:
+        print(x, end=" -> ")
