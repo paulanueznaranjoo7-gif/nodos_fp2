@@ -1,0 +1,85 @@
+class Stack:
+
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next_node = next_node
+
+    def __init__(self):
+        self.__top = None
+        self.size = 0  
+
+    def push(self, value):
+        new_node = self.Node(value)
+        new_node.next_node = self.__top
+        self.__top = new_node
+        self.size += 1
+
+    def pop(self):
+        if self.__top is None:
+            raise StackEmptyError("La pila está vacía")
+    
+        valor = self.__top.value
+        self.__top = self.__top.next_node
+        self.size -= 1
+        return valor
+    
+    def duplicate_top(self):
+        if self.__top is None:
+            raise StackEmptyError("pila vacía")
+    
+        valor = self.__top.value
+        new_node = self.Node(value)
+        new_node = self.Node(value, self.__top)
+        self.size += 1
+    
+    def count_even(self):
+        current = self.__top
+        contador = 0
+        
+        while current is not None:
+            resto = current.value % 2
+            if resto == 0:
+                contador += 1
+            current = current.next_node
+        return contador
+                
+
+
+
+
+
+
+from stackexceptions import StackEmptyError
+
+if __name__ == "__main__":
+    
+    s = Stack()
+
+    # Parte A
+    s.push(5)
+    s.push(8)
+    s.push(12)
+
+    print("Estado inicial creado")
+
+    print("---")
+
+    # Parte B
+    print(s.pop())
+    print(s.pop())
+    
+    s.push(20)
+    
+    print(s.pop())
+    print(s.pop())
+
+    print("---")
+
+    # Parte C (cuando lo implementes)
+    # s.push(7)
+    # s.push(3)
+# s.duplicate_top()
+
+    # Parte D (cuando lo implementes)
+    # print(s.count_even())º
