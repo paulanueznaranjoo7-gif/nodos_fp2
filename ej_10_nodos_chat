@@ -1,0 +1,129 @@
+class LinkedList:
+    def __init__(self):
+        self.head = None
+    
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next_node = next_node
+
+    
+    def insert_after_value(self, target, value):
+        current = self.head
+
+    # buscar el nodo con el valor target
+        while current is not None and current.value != target:
+            current = current.next_node
+
+    # si no existe el valor, no hacemos nada
+        if current is None:
+            return
+
+    # insertar justo después (FORMA PRO 🔥)
+        current.next_node = self.Node(value, current.next_node)
+
+    
+    def insert_sorted(self, value):
+        new_node = self.Node(value)
+
+        if self.head is None or self.head.value < value:
+            new_node.next_node = self.head #nuevo nodo apunta al antiguo primero
+            self.head = new_node #actualizo self.head
+            return
+            
+        current = self.head
+        
+        while current.next_node is not None and current.next_node.value >= value:
+            current = current.next_node
+        current.next_node = self.Node(value, current.next_node)
+   
+    def remove_duplicates(self):
+        current = self.head
+        
+        while current is not None:
+            runner = current
+            while runner.next_node is not None:
+                if current.value == runner.next_node.value:
+                    runner.next_node = runner.next_node.next_node #apunto al siguiente nodo
+                else:
+                    runner = runner.next_node
+            current = current.next_node
+            
+    def max_value(self):
+        current = self.head
+        max = -99999
+        
+        while current is not None:
+            if current.value >= max:
+                max = current.value
+            current = current.next_node
+                
+        return max
+            
+        
+
+
+
+if __name__ == "__main__":
+    
+    lista = LinkedList()
+
+    # --- PRUEBA INSERT_SORTED ---
+    print("Insertando en orden...")
+    lista.insert_sorted(5)
+    lista.insert_sorted(2)
+    lista.insert_sorted(8)
+    lista.insert_sorted(6)
+
+    # Debería quedar: 2 → 5 → 6 → 8
+    current = lista.head
+    while current:
+        print(current.value, end=" → ")
+        current = current.next_node
+    print("None")
+
+    print("---")
+
+    # --- PRUEBA INSERT_AFTER_VALUE ---
+    print("Insertar después de 5...")
+    lista.insert_after_value(5, 99)
+
+    # Esperado: 2 → 5 → 99 → 6 → 8
+    current = lista.head
+    while current:
+        print(current.value, end=" → ")
+        current = current.next_node
+    print("None")
+
+    print("---")
+
+
+
+    # --- PRUEBA REMOVE_DUPLICATES ---
+    print("Añadiendo duplicados...")
+    lista.insert_sorted(2)
+    lista.insert_sorted(5)
+    lista.insert_sorted(8)
+
+    # Ahora hay duplicados
+    print("Antes de eliminar duplicados:")
+    current = lista.head
+    while current:
+        print(current.value, end=" → ")
+        current = current.next_node
+    print("None")
+
+    lista.remove_duplicates()
+
+    print("Después de eliminar duplicados:")
+    current = lista.head
+    while current:
+        print(current.value, end=" → ")
+        current = current.next_node
+    print("None")
+
+    print("---")
+
+    # --- PRUEBA MAX_VALUE ---
+    print("Máximo de la lista:")
+    print(lista.max_value())
