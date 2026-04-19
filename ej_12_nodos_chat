@@ -1,0 +1,91 @@
+class Node:
+    def __init__(self, alumno):
+        self.alumno = alumno
+        self.next = None
+    
+class Alumno:
+    def __init__(self, nombre, nota):
+        self.nombre = nombre
+        self.nota = nota
+
+    def clasificar_nota(self):
+        if self.nota < 5:
+            return "Suspenso"
+        elif  5 <= self.nota <= 6:
+            return "Aprobado"
+        elif  7 <= self.nota <= 8:
+            return "Notable"
+        elif  9 <= self.nota <= 10:
+            return "Sobresaliente"
+           
+class ListaEnlazada:
+    def __init__(self):
+        self.head = None
+
+    def agregar(self, alumno):
+        new_node = Node(alumno)
+            
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+            while current is not None and current.next is not None:
+                current = current.next
+            current.next = new_node
+
+    def mostrar(self):
+        current = self.head
+            
+        while current is not None:
+            print(current.alumno.nombre, current.alumno.nota, current.alumno.clasificar_nota())
+            current = current.next 
+             
+    def buscar(self, nombre):
+        current = self.head
+            
+        while current is not None:
+            if current.alumno.nombre == nombre:
+                return current.alumno
+            current = current.next
+        return None
+
+    def eliminar(self, nombre):
+        current = self.head
+            
+        while self.head is not None and self.head.alumno.nombre == nombre:
+            self.head = self.head.next
+                
+        current = self.head
+            
+        while current is not None and current.next is not None:
+            if current.next.alumno.nombre == nombre:
+                current.next = current.next.next
+            current = current.next
+
+def main():
+    lista = ListaEnlazada()
+
+    lista.agregar(Alumno("Ana", 4))
+    lista.agregar(Alumno("Luis", 6))
+    lista.agregar(Alumno("Marta", 8))
+    lista.agregar(Alumno("Carlos", 10))
+
+    print("Lista de alumnos:")
+    lista.mostrar()
+
+    print("\nBuscar 'Marta':")
+    alumno = lista.buscar("Marta")
+    if alumno:
+        print("Encontrado:", alumno.nombre)
+    else:
+        print("No encontrado")
+
+    print("\nEliminar 'Luis'")
+    lista.eliminar("Luis")
+
+    print("\nLista actualizada:")
+    lista.mostrar()
+
+
+if __name__ == "__main__":
+    main()
