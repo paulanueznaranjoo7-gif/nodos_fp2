@@ -1,0 +1,81 @@
+class Node:
+    def __init__(self, paciente):
+        self.paciente = paciente
+        self.next = None
+
+class Paciente:
+    def __init__(self, nombre, prioridad):
+        self.nombre = nombre
+        self.prioridad = prioridad  # 1 urgente, 2 normal
+
+    def tipo(self):
+        if self.prioridad == 1:
+            return "Urgente"
+        if self.prioridad == 2:
+            return "Normal"
+
+
+class ColaUrgencias:
+    def __init__(self):
+        self.head = None
+
+    def llegar(self, paciente):
+        new_node = Node(paciente)
+        
+        if self.head is None:
+            self.head = new_node
+        else:
+            if paciente.prioridad == 1:
+                new_node.next = self.head
+                self.head = new_node
+            elif paciente.prioridad == 2:
+                current = self.head
+                while current.next is not None:
+                    current = current.next
+                current.next = new_node
+            
+
+    def atender(self):
+        while self.head is not None:
+            self.head = self.head.next
+                
+    def mostrar(self):
+        current = self.head
+        
+        while current is not None:
+            print(current.paciente.nombre)
+            current = current.next
+            
+
+    def contar_urgentes(self):
+        current = self.head
+        contador = 0
+        
+        while current is not None:
+            if current.paciente.prioridad == 1:
+                contador += 1
+            current = current.next
+            
+        return contador
+            
+
+def main():
+    cola = ColaUrgencias()
+
+    cola.llegar(Paciente("Ana", 2))
+    cola.llegar(Paciente("Luis", 1))
+    cola.llegar(Paciente("Marta", 2))
+    cola.llegar(Paciente("Carlos", 1))
+
+    print("Cola:")
+    cola.mostrar()
+
+    print("\nAtender paciente:")
+    cola.atender()
+    cola.mostrar()
+
+    print("\nUrgentes:", cola.contar_urgentes())
+
+
+if __name__ == "__main__":
+    main()
