@@ -1,0 +1,93 @@
+class Node:
+    def __init__(self, pagina):
+        self.pagina = pagina
+        self.next = None
+
+
+class Pagina:
+    def __init__(self, url, tiempo):
+        self.url = url
+        self.tiempo = tiempo  # minutos en la página
+
+    def tipo_uso(self):
+        if self.tiempo > 5:
+            return "Rápido"
+        if 5 > self.tiempo > 10:
+            return "Normal"
+        if self.tiempo > 15:
+            return "Intensivo"
+
+
+class Historial:
+    def __init__(self):
+        self.head = None
+
+    def visitar(self, pagina):
+        new_node = Node(pagina)
+        
+        if self.head is None:
+            self.head = new_node
+        else:
+            new_node.next = self.head
+            self.head = new_node
+
+    def insertar_despues(self, url, nueva_pagina):
+        new_node = Node(nueva_pagina)
+        current = self.head
+        
+        while current is not None: 
+            if current.pagina.url == url:
+                new_node.next = current.next
+                current.next = new_node
+                return #como no quiero que siga pongo return
+            current = current.next
+
+    def mostrar(self):
+        current = self.head
+        
+        while current is not None:
+            print(current.pagina.url)
+            current = current.next
+            
+
+    def borrar_ultima(self):
+        current = self.head
+        
+        while current.next.next is None:
+            current =  current.next
+        current.next = current.next.next
+
+    def total_tiempo(self):
+        current = self.head
+        sumador = 0
+        
+        while current is not None:
+            sumador += current.pagina.tiempo
+            current = current.next
+        
+        return sumador
+            
+    
+def main():
+    historial = Historial()
+
+    historial.visitar(Pagina("google.com", 3))
+    historial.visitar(Pagina("youtube.com", 20))
+    historial.visitar(Pagina("wikipedia.org", 10))
+
+    print("Historial:")
+    historial.mostrar()
+
+    print("\nInsertar después de youtube:")
+    historial.insertar_despues("youtube.com", Pagina("twitter.com", 8))
+    historial.mostrar()
+
+    print("\nBorrar última:")
+    historial.borrar_ultima()
+    historial.mostrar()
+
+    print("\nTiempo total:", historial.total_tiempo())
+
+
+if __name__ == "__main__":
+    main()
