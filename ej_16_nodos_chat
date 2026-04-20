@@ -1,0 +1,65 @@
+class Editor:
+
+    class Node:
+        def __init__(self, char):
+            self.char = char
+            self.next = None
+
+    def __init__(self):
+        self.head = None
+        self.cursor = None   # apunta a un nodo
+
+    def insertar(self, char):
+        new_node = Editor.Node(char)
+        current = self.head
+        
+        if self.head is None:
+            self.head = new_node
+            self.cursor = new_node
+        else:
+            current = self.head
+            new_node.next = self.cursor.next
+            self.cursor.next = new_node
+            
+    def mover_cursor_inicio(self):
+        self.cursor = self.head
+
+    def mover_cursor_derecha(self):
+        self.cursor = self.cursor.next
+
+    def borrar_siguiente(self):
+        if self.cursor is not None and self.cursor.next is not None:
+            self.cursor.next = self.cursor.next.next
+                
+    def mostrar(self):
+        current = self.head
+        
+        while current is not None:
+            print(current.char)
+            current = current.next
+    
+def main():
+    e = Editor()
+
+    e.insertar("H")
+    e.insertar("O")
+    e.insertar("L")
+    e.insertar("A")
+
+    print("Texto:")
+    e.mostrar()
+
+    print("\nMover cursor al inicio:")
+    e.mover_cursor_inicio()
+
+    print("\nInsertar X:")
+    e.insertar("X")
+    e.mostrar()
+
+    print("\nBorrar siguiente:")
+    e.borrar_siguiente()
+    e.mostrar()
+
+
+if __name__ == "__main__":
+    main()
