@@ -1,0 +1,73 @@
+class Navegador:
+
+    class Node:
+        def __init__(self, pagina):
+            self.pagina = pagina
+            self.next = None
+            self.prev = None
+
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.actual = None   # como cursor
+
+    def visitar(self, pagina):
+        new_node = Navegador.Node(pagina)
+
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+            self.actual = new_node
+        else:
+        # conectar hacia delante
+            new_node.next = self.actual.next
+            # conectar hacia atrás
+            new_node.prev = self.actual
+        
+        # si había un siguiente, arreglar su prev
+            if self.actual.next is not None:
+                self.actual.next.prev = new_node
+            else:
+                self.tail = new_node  # era el último
+
+        # conectar el actual con el nuevo
+                self.actual.next = new_node
+
+        # mover el cursor
+                self.actual = new_node
+
+    def atras(self):
+        if self.actual.prev is not None:
+            self.actual = self.actual.prev
+
+    def adelante(self):
+        self.actual = self.actual.next
+
+    def mostrar(self):
+        current = self.head
+        
+        while current is not None:
+            print(current.pagina)
+            current = current.next
+
+def main():
+    n = Navegador()
+
+    n.visitar("google.com")
+    n.visitar("youtube.com")
+    n.visitar("wikipedia.org")
+
+    print("Historial:")
+    n.mostrar()
+
+    print("\nAtrás:")
+    n.atras()
+    print(n.actual.pagina)
+
+    print("\nAdelante:")
+    n.adelante()
+    print(n.actual.pagina)
+
+
+if __name__ == "__main__":
+    main()
