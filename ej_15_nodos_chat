@@ -1,0 +1,103 @@
+class Playlist:
+
+    class Node:
+        def __init__(self, cancion):
+            self.cancion = cancion
+            self.next = None
+
+    class Cancion:
+        def __init__(self, titulo, duracion):
+            self.titulo = titulo
+            self.duracion = duracion  # en minutos
+
+        def tipo(self):
+            # TODO:
+            # < 3 → "Corta"
+            # 3–5 → "Media"
+            # > 5 → "Larga"
+            pass
+
+    def __init__(self):
+        self.head = None
+
+    def agregar_al_final(self, cancion):
+        new_node = Playlist.Node(cancion)
+        
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next is not None:
+                current = current.next
+            new_node.next = current.next
+            current.next = new_node
+            
+
+    def insertar_en_posicion(self, posicion, cancion):
+        new_node = Playlist.Node(cancion)
+        
+        if posicion == 0:
+            new_node.next = self.head
+            self.head = new_node
+        else:
+            current = self.head
+            current_pos = 1
+            while current_pos > posicion:
+                current_pos += 1
+                current = current.next
+            new_node.next = current.next
+            current.next = new_node
+          
+        
+    def eliminar_por_titulo(self, titulo):
+        
+        while self.head is not None and self.head.cancion.titulo == titulo:
+            self.head = self.head.next
+        
+        current = self.head
+        
+        while current.next is not None:
+            if current.next.cancion.titulo == titulo:
+                current.next = current.next.next
+            current = current.next
+    
+    def mostrar(self):
+        current = self.head
+        
+        while current is not None:
+            print(current.cancion.titulo)
+            current = current.next
+
+    def total_duracion(self):
+        current = self.head
+        duracion = 0
+        
+        while current is not None:
+            duracion += current.cancion.duracion
+            current = current.next
+        
+        return duracion
+
+def main():
+    p = Playlist()
+
+    p.agregar_al_final(Playlist.Cancion("Song1", 2))
+    p.agregar_al_final(Playlist.Cancion("Song2", 4))
+    p.agregar_al_final(Playlist.Cancion("Song3", 6))
+
+    print("Playlist:")
+    p.mostrar()
+
+    print("\nInsertar en posición 1:")
+    p.insertar_en_posicion(1, Playlist.Cancion("Nueva", 5))
+    p.mostrar()
+
+    print("\nEliminar 'Song2':")
+    p.eliminar_por_titulo("Song2")
+    p.mostrar()
+
+    print("\nDuración total:", p.total_duracion())
+
+
+if __name__ == "__main__":
+    main()
