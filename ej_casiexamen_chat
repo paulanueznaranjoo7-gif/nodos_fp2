@@ -1,0 +1,103 @@
+class User:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value
+            self.next = next
+
+    def __init__(self, name):
+        self.name = name
+        self.friends = None  # lista enlazada de amigos
+    
+    def add_friend(self, name):
+        new_node = self.Node(name)
+        current = self.friends
+        
+        if self.friends is None:
+            self.friends = new_node
+        
+        current = self.friends
+        
+        while current.next is not None:
+            if current.next.value == name:
+                return True
+            else:
+                current = current.next
+                
+        new_node.next = current.next
+        current.next = new_node
+    
+    def is_friend(self, name):
+        current = self.friends
+        
+        while current is not None:
+            if current.value == name:
+                return True
+            else:
+                current = current.next
+                
+                
+
+class SocialNetwork:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto User
+            self.next = next
+
+    def __init__(self):
+        self.users = None  # lista enlazada de usuarios
+    
+    def add_user(self, name):
+        current = self.users
+        user = User(name)
+        new_node = self.Node(user)
+        
+        if self.users is None:
+            self.users = new_node
+        
+        current = self.users
+        
+        while current.next is not None:
+            if current.next.value.name == name:
+                return True
+            else:
+                current = current.next
+        new_node.next = current.next
+        current.next = new_node
+    
+    def get_user(self, name):
+        current = self.users
+        
+        while current is not None:
+            if current.value.name == name:
+                return current.value
+            else:
+                current = current.next
+
+    
+    def common_friends(self, user_name1, user_name2):
+        user1 = self.get_user(user_name1)
+        user2 = self.get_user(user_name2)
+    
+        resultado = User("temp")  # usamos un User como contenedor
+    
+        current = user1.friends
+        while current is not None:
+            if user2.is_friend(current.value):
+                resultado.add_friend(current.value)
+            current = current.next
+    
+        return resultado
+            
+net = SocialNetwork()
+
+net.add_user("Ana")
+net.add_user("Luis")
+
+net.get_user("Ana").add_friend("Carlos")
+net.get_user("Ana").add_friend("Marta")
+
+net.get_user("Luis").add_friend("Marta")
+net.get_user("Luis").add_friend("Pedro")
+
+common = net.common_friends("Ana", "Luis")
+print(common)
