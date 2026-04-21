@@ -1,0 +1,97 @@
+from containerbase import ContainerBase 
+
+class InterestGroup(ContainerBase):
+
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+    
+    def is_member(self, value):
+        current = self.first
+        
+        while current is not None:
+            if current.value == value:
+                return True
+            else:
+                current = current.next
+        return False
+    
+    def add_member(self, value):
+        new_node = InterestGroup.Node(value)
+        current = self.first
+        
+        if self.first is None:
+            self.first = new_node
+        
+        if self.first is not None and self.first.value == value:
+            return False
+        
+        current = self.first
+        
+        while current.next is not None:
+            if current.next.value == value:
+                return False
+            else:
+                current = current.next
+                
+        new_node.next = current.next
+        current.next = new_node
+        return True
+    
+    @property
+    def size(self):
+        current = self.first
+        contador_miembros = 0
+        
+        while current is not None:
+            contador_miembros += 1
+            current = current.next
+        
+        return contador_miembros
+    
+    def union(self, other_group):
+        nuevo_grupo = InterestGroup()
+        current = self.first
+        
+        while current is not None:
+            nuevo_grupo.add_member(current.value)
+            current = current.next
+        
+        current = other_group.first
+        
+        while current is not None:
+            nuevo_grupo.add_member(current.value)
+            current = current.next
+        
+        return nuevo_grupo
+
+    
+    def remove_member(self, value):
+        
+        if self.first is not None and self.first.value == value:
+            self.first = self.first.next
+            return True
+        
+        current = self.first
+      
+        while current.next is not None:
+            if current.next.value == value:
+                current.next = current.next.next
+                return True
+            else:
+                current = current.next
+        
+        return False
+            
+        
+       
+                
+        
+    
+        
+                
+                
