@@ -1,0 +1,104 @@
+class Package:
+    def __init__(self, code, weight):
+        self.code = code
+        self.weight = weight  # en kg
+
+    def __str__(self):
+        return f"{self.code} [{self.weight}kg]"
+class Warehouse:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Package
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+    
+    def push_front(self, package):
+        new_node = self.Node(package)
+        
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+            return
+        
+        elif self.first is not None:
+            new_node.next = self.first
+            self.first = new_node
+            
+    def remove_last(self):
+        
+        if self.first is None:
+            return None
+        prev = self.first
+        current = self.first.next
+        
+        if self.first == self.last: #solo hay un nodo
+            current = None
+            return 
+        
+        while current != self.last:
+            prev = current
+            current = current.next
+        prev.next = None
+        self.last = prev
+    
+    def find_heaviest(self):
+        current = self.first
+        max = -99999
+        maxima
+        
+        while current is not None:
+            if current.value.weight > max:
+                max = current.value.weight
+                maxima = current.value
+            current = current.next
+        
+        return max
+            
+    def split_heavy(self, limit):
+        heavy_items = Warehouse()
+        current = self.first
+        
+        if self.first is not None:
+            if self.first.value.weight > limit:
+                heavy_items.push_front(self.first.value)
+                self.first = self.first.next
+        
+        current = self.first
+        
+        while current.next is not None:
+            if current.next.value.weight > limit:
+                heavy_items.push_front(current.next.value)
+                current.next = current.next.next
+                current = current.next
+            else:
+                current = current.next
+                
+                
+        return heavy_items
+        
+        
+        
+w = Warehouse()
+
+w.push_front(Package("A", 10))
+w.push_front(Package("B", 30))
+w.push_front(Package("C", 5))
+w.push_front(Package("D", 50))
+
+heavy = w.split_heavy(20)
+
+print(w)      # ligeros
+print(heavy)  # pesados        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+            
