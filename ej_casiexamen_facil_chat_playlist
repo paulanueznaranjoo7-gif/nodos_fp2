@@ -1,0 +1,90 @@
+class Song:
+    def __init__(self, title, duration):
+        self.title = title
+        self.duration = duration  # en segundos
+
+    def __str__(self):
+        return f"{self.title} ({self.duration}s)"
+
+class Playlist:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Song
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+    
+    def add_song(self, song): #ya nos estan pasando el parametro
+        new_node = self.Node(song)
+        current = self.first
+        
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+            return 
+            
+        current = self.first
+        
+        while current.next is not None:
+            current = current.next
+        new_node.next = current.next
+        current.next = new_node
+        self.last = new_node
+        
+    def play_next(self):
+        primera = self.first
+        
+        if primera is not None:
+            self.first = self.first.next
+            return primera.value #siempre se nos olvida esto, ACUERDATE
+        return None
+    
+    @property
+    def total_duration(self):
+        current = self.first
+        total = 0
+        
+        while current is not None:
+            total += current.value.duration #(self.duration)el metodo esta dentro de playlist y self.duration no esta en playlist tendre que acceder de otra manera
+            current = current.next
+        
+        return total
+    
+    def filter_long_songs(self, min_duration):
+        long_songs = Playlist()
+        current = self.first
+        
+        while current is not None:
+            if current.value.duration >= min_duration: #current.value = song (lo que pongo en el nodo)
+                long_songs.add_song(current.value)
+            current = current.next
+        
+        return long_songs
+    def __str__(self):
+        current = self.first
+        result = ""
+    
+        while current is not None:
+            result += f"[{current.value}] -> "
+            current = current.next
+    
+        result += "None"
+        return result
+        
+p = Playlist()
+
+p.add_song(Song("Song1", 120))
+p.add_song(Song("Song2", 200))
+p.add_song(Song("Song3", 90))
+
+print(p.total_duration)  # 410
+
+print(p.play_next())     # Song1 (120s)
+
+print(p.total_duration)  # 290
+
+long_songs = p.filter_long_songs(150)
+print(long_songs)        
+            
