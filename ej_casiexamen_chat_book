@@ -1,0 +1,108 @@
+class Book:
+    def __init__(self, title, pages):
+        self.title = title
+        self.pages = pages
+
+    def __str__(self):
+        return f"{self.title} ({self.pages}p)"
+
+class Library:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Book
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+    
+    def add_book(self, titles, pages): #atributos para crear el objeto
+        book = Book(titles, pages)
+        new_node = self.Node(book)
+        
+        if self.first is None: #miramos si esta vacio
+            self.first = new_node
+            self.last = new_node
+            return 
+        
+        current = self.first
+        
+        while current.next is not None:
+            current = current.next
+        new_node.next = current.next
+        current.next = new_node
+        self.last = new_node
+        
+    def remove_by_title(self, title):
+        current = self.first
+        
+        if self.first is not None and self.first.title == title:
+            self.first = self.first.next
+            return True
+        
+        current = self.first
+        
+        while current.next is not None:
+            if current.next.value.title == title:
+                current.next = current.next.next
+                return True
+            else:
+                current = current.next
+        self.last = current
+        return False
+    
+    def count_books_with_pages(self, min_pages):
+        current = self.first
+        paginas = 0
+        
+        while current is not None:
+            if current.value.pages > min_pages:
+                paginas += 1
+                current = current.next
+                
+        return paginas
+            
+    def extract_short_books(self, limit):
+        paginas_menos = Library()
+        current = self.first
+        
+        if self.first is not None:
+            if self.first.value.pages < limit:
+                paginas_menos.add_book(self.first.value.title, self.first.value.pages)
+                self.first = self.first.next
+                
+        current = self.first
+        
+        while current is not None and current.next is not None:
+            if current.next.value.pages < limit:
+                paginas_menos.add_book(current.next.value.title, current.next.value.pages)
+                current.next = current.next.next
+            else:
+                current = current.next
+        
+        return paginas_menos
+                
+    def __str__(self):
+        current = self.first
+        result = ""
+    
+        while current is not None:
+            result += f"[{current.value}] -> "
+            current = current.next
+    
+        result += "None"
+        return result            
+                
+                
+lib = Library()
+
+lib.add_book("Book1", 100)
+lib.add_book("Book2", 300)
+lib.add_book("Book3", 150)
+lib.add_book("Book4", 80)
+
+short = lib.extract_short_books(200)
+
+print(lib)     # libros largos
+print(short)   # libros cortos    
+    
