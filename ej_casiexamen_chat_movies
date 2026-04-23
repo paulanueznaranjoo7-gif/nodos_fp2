@@ -1,0 +1,134 @@
+class Movie:
+    def __init__(self, title, rating):
+        self.title = title
+        self.rating = rating  # de 0 a 10
+
+    def __str__(self):
+        return f"{self.title} ({self.rating})"
+
+class MovieList:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Movie
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+    
+    def add_first(self, title, rating):
+        movie = Movie(title, rating)
+        new_node = self.Node(movie)
+        
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+            return 
+        
+        else:
+            new_node.next = self.first
+            self.first = new_node
+            
+    def remove_last(self):
+        
+        if self.first is None: #si la lista esta vacia
+            return 
+        
+        elif self.first.next is None: #si solo hay un nodo
+            o = self.first
+            self.first = self.first.next
+            return o.value
+        
+        else:
+            prev = self.first
+            current = self.first.next
+            
+            while current is not self.last:
+                prev = current
+                current = current.next
+            prev.next = None
+            self.last = prev
+            return prev.next.value
+    
+    def find_best_movie(self):
+        current = self.first
+        max = -9999
+        maxima_peli = 0
+        
+        while current is not None:
+            if current.value.rating > max:
+                max = current.value.rating
+                maxima_peli = current.value
+            current = current.next
+        
+        return maxima_peli
+        
+    def add_last(self, title, rating):
+        movie1 = Movie(title, rating)
+        new_node = self.Node(movie1)
+        
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+            return
+        else:
+            self.last.next = new_node
+            self.last = new_node
+        
+    def extract_low_rated(self, limit):
+        lowrated_movies = MovieList()
+        current = self.first 
+        
+        if self.first is not None:
+            if self.first.value.rating < limit:
+                lowrated_movies.add_last(self.first.value.title, self.first.value.rating)
+                self.first = self.first.next
+        
+        current = self.first
+        
+        while current and current.next is not None:
+            if current.next.value.rating < limit:
+                lowrated_movies.add_last(current.next.value.title, current.next.value.rating)
+                current.next = current.next.next
+            else:
+                current = current.next
+                
+        return lowrated_movies
+    
+    def __str__(self):
+        current = self.first
+        result = ""
+    
+        while current is not None:
+            result += f"[{current.value}] -> "
+            current = current.next
+    
+        result += "None"
+        return result
+        
+ml = MovieList()
+
+ml.add_first("Movie1", 8)
+ml.add_first("Movie2", 3)
+ml.add_first("Movie3", 7)
+ml.add_first("Movie4", 2)
+
+low = ml.extract_low_rated(5)
+
+print(ml)   # películas con rating >= 5
+print(low)  # películas con rating < 5       
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+            
+            
