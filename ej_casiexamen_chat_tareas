@@ -1,0 +1,102 @@
+class Task:
+    def __init__(self, title, priority):
+        self.title = title
+        self.priority = priority  # número (1–10)
+
+    def __str__(self):
+        return f"{self.title} ({self.priority})"
+        
+class TaskList:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Task
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+        self.size = 0   # 👈 importante para property            
+        
+    def add_last(self, title, priority):
+        tarea = Task(title, priority)
+        new_node = self.Node(tarea)
+        
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+            self.size += 1
+            return 
+        self.last.next = new_node
+        self.last = new_node
+        self.size += 1 #aumentamos size
+    
+    def remove_first(self):
+        if self.first is not None:
+            self.first = self.first.next
+            self.size -= 1
+            if self.first is None:
+                self.last = None
+                
+    
+    @property
+    def high_priority_count(self):
+        tareas_urgente = 0
+        current = self.first
+        
+        while current is not None:
+            if current.value.priority >= 7:
+                tareas_urgente += 1
+            current = current.next
+        return tareas_urgente
+    
+    def extract_low_priority(self, limit):
+        low_limit = TaskList()
+        
+        while self.first is not None and self.first.value.priority < limit:
+            low_limit.add_last(self.first.value.title, self.first.value.priority)
+            self.first = self.first.next
+            self.size -= 1
+            
+        current = self.first
+        
+        while current is not None and current.next is not None:
+            if current.next.value.priority < limit:
+                low_limit.add_last(current.next.value.title, current.next.value.priority)
+                current.next = current.next.next
+                self.size -= 1
+            else:
+                current = current.next
+                
+        self.last = current
+        return low_limit
+    
+    def __str__(self):
+        current = self.first
+        result = ""
+    
+        while current is not None:
+            result += f"[{current.value}] -> "
+            current = current.next
+    
+        result += "None"
+        return result
+        
+tl = TaskList()
+
+tl.add_last("Task1", 8)
+tl.add_last("Task2", 3)
+tl.add_last("Task3", 6)
+tl.add_last("Task4", 9)
+
+low = tl.extract_low_priority(7)
+
+print(tl)   # prioridad ≥ 7
+print(low)  # prioridad < 7
+
+print("altas:", tl.high_priority_count)        
+        
+        
+        
+        
+        
+        
