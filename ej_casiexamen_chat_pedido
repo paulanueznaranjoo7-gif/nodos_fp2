@@ -1,0 +1,120 @@
+class OrderList:
+    class Order:
+        def __init__(self, code, price):
+            self.code = code
+            self.price = price
+
+        def __str__(self):
+            return f"{self.code} ({self.price}€)"
+
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Order
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+        self.size = 0
+    
+    def insert_at(self, position, code, price):
+        order = self.Order(code, price)
+        new_node = OrderList.Node(order)
+        
+        if position < 0 or position > self.size:
+            raise IndexError
+        elif position == 0:
+            if self.first is not None:
+                new_node.next = self.first
+                self.first = new_node
+                self.size += 1
+                return
+            else:
+                self.first = new_node
+                self.last = new_node
+                self.size += 1
+                return
+        elif position == self.size:
+            self.last.next = new_node
+            self.last = new_node
+            self.size += 1
+            return
+        else:
+            current = self.first
+            current_pos = 1
+            
+            while current_pos < position:
+                current = current.next
+                current_pos += 1
+                
+            new_node.next = current.next
+            current.next = new_node
+            self.size += 1
+    
+    def delete_at(self, posicion):
+        if posicion == 0:
+            if self.first is not None:
+                self.first = self.first.next
+                self.size -= 1
+                return
+            else:
+                self.last = None
+                return
+        else:
+            prev = self.first
+            current = self.first
+            current_pos = 1
+            
+            while current is not None and current_pos < posicion:
+                prev = current
+                current = current.next
+                current_pos += 1
+                
+            prev.next = current.next
+            self.size -= 1
+            if current is None:
+                self.last = prev
+                
+    
+    @property
+    def average_price(self):
+        if self.first is None:
+            return 
+        else:
+            pedidos = 0
+            medio = 0
+            current = self.first 
+            while current is not None:
+                medio += current.value.price
+                pedidos += 1
+                current = current.next
+            return medio / pedidos
+    
+    def __str__(self):
+        current = self.first
+        result = ""
+    
+        while current is not None:
+            result += f"[{current.value}] -> "
+            current = current.next
+    
+        result += "None"
+        return result
+            
+ol = OrderList()
+
+ol.insert_at(0, "A", 10)
+ol.insert_at(1, "B", 50)
+ol.insert_at(1, "C", 30)
+ol.insert_at(3, "D", 5)
+
+print(ol)
+print("media:", ol.average_price)    
+            
+                
+                
+                
+                
+                
+                
+                
