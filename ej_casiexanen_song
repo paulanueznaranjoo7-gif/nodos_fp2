@@ -1,0 +1,158 @@
+class Song:
+    def __init__(self, title, duration):
+        self.title = title
+        self.duration = duration  # en segundos
+
+    def __str__(self):
+        return f"{self.title} ({self.duration}s)"
+
+class MusicList:
+    class Node:
+        def __init__(self, value, next=None):
+            self.value = value  # objeto Song
+            self.next = next
+
+    def __init__(self):
+        self.first = None
+        self.last = None
+        self.size = 0
+    
+    def insert_at(self, position, title, duration):
+        musica_lista = Song(title, duration)
+        new_node = self.Node(musica_lista)
+        
+        if position < 0:
+            raise IndexError
+        elif position == 0:
+            if self.first is not None:
+                new_node.next = self.first
+                self.first = new_node
+                self.size += 1
+            else:
+                self.first = new_node
+                self.last = new_node
+                self.size += 1
+               
+        
+        elif position == self.size:
+            self.last.next = new_node
+            self.last = new_node
+            self.size += 1
+            return 
+            
+        
+        else:
+            current = self.first
+            current_pos = 0
+            
+            while current.next is not None and current_pos < position:
+                current = current.next
+                current_pos += 1
+            
+            new_node.next = current.next
+            current.next = new_node
+            
+    
+    def delete_at(self, position):
+        if position < 0:
+            position += position + self.size
+        
+        elif position == 0:
+            self.first = self.first.next
+            self.size -= 1
+            if self.first is None:
+                self.last = None
+                return
+                
+                
+        else:
+            prev = self.first
+            current = self.first.next
+            current_pos = 0
+            
+            while current_pos is not position:
+                prev = current
+                current = current.next
+                current_pos += 1
+            
+            prev.next = current.next
+            self.size -= 1
+
+            if current == self.last:
+                self.last = prev
+    
+    @property
+    def total_duration(self):
+        total = 0
+        current = self.first 
+        
+        while current is not None:
+            total += current.value.duration
+            current = current.next
+        return total
+    
+    def add_last(self, title, duration):
+        music_lit = Song(title, duration)
+        new_node = self.Node(music_lit)
+        
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+            self.size += 1
+            return
+        self.last.next = new_node
+        self.last = new_node
+        self.size += 1
+    
+    def extract_long_songs(self, limit):
+        long_songs = MusicList()
+        
+        while self.first is not None and self.first.value.duration > limit:
+            long_songs.add_last(self.first.value.title, self.first.value.duration)
+            self.first = self.first.next
+            self.size -= 1
+            
+        current = self.first
+        
+        while current is not None and current.next is not None:
+            if current.next.value.duration > limit:
+                long_songs.add_last(current.next.value.title, current.next.value.duration)
+                current.next = current.next.next
+                self.size -= 1
+            else:
+                current = current.next
+        self.last = current
+        return long_songs
+        
+    def __str__(self):
+        current = self.first
+        result = ""
+    
+        while current is not None:
+            result += f"[{current.value}] -> "
+            current = current.next
+    
+        result += "None"
+        return result
+        
+        
+ml = MusicList()
+
+ml.insert_at(0, "Song1", 120)
+ml.insert_at(1, "Song2", 300)
+ml.insert_at(1, "Song3", 200)
+ml.insert_at(3, "Song4", 90)
+
+long = ml.extract_long_songs(180)
+
+print(ml)    # canciones cortas
+print(long)  # canciones largas
+
+print("duración total:", ml.total_duration)    
+                
+                
+                
+                
+                
+                
+            
